@@ -5,9 +5,9 @@ include "model.thrift"
 
 //视频流
 struct FeedRequest{
-    1:optional string latest_time(api.query="latest_time"),
-    2:required i64 page_num (api.query="page_num"),
-    3:required i64 page_size (api.query="page_size")
+    1:optional string latest_time,
+    2:required i64 page_num ,
+    3:required i64 page_size 
 }
 
 struct FeedResponse{
@@ -17,10 +17,11 @@ struct FeedResponse{
 
 //投稿
 struct UploadRequest{
-    1:required string title (api.form="title"),
-//    2:required binary coverdata (api.form="coverdata"),
-//    3:required binary videodata (api.form="videodata"),
-    2:required string description (api.form="description"),
+    1:required string title ,
+    2:required string cover_url,
+    3:required string video_url ,
+    4:required string description ,
+    5:required i64 user_id ,
 }
 
 struct UploadResponse{
@@ -28,9 +29,9 @@ struct UploadResponse{
 }
 //发布列表
 struct UploadListRequest{
-    1:required string user_id (api.query="user_id"),
-    2:required i64 page_num (api.query="page_num"),
-    3:required i64 page_size (api.query="page_size"),
+    1:required i64 user_id ,
+    2:required i64 page_num ,
+    3:required i64 page_size ,
 }
 struct UploadListResponse{
     1:model.BaseResp base,
@@ -39,8 +40,8 @@ struct UploadListResponse{
 
 //热门排行榜
 struct RankRequest{
-    1:required i64 page_num (api.query="page_num"),
-    2:required i64 page_size (api.query="page_size"),
+    1:required i64 page_num ,
+    2:required i64 page_size ,
 }
 struct RankResponse{
     1:model.BaseResp base,
@@ -48,16 +49,48 @@ struct RankResponse{
 }
 //搜索视频
 struct QueryRequest{
-    1:optional string keywords (api.form="keywords"),
-    2:required i64 page_size (api.form="page_size"),
-    3:required i64 page_num (api.form="page_num"),
-    4:optional i64 from_date (api.form="from_date"),
-    5:optional i64 to_date (api.form="to_date"),
-    6:optional string username (api.form="username"),
+    1:optional string keywords ,
+    2:required i64 page_size ,
+    3:required i64 page_num ,
+    4:optional i64 from_date ,
+    5:optional i64 to_date ,
+    6:optional string username ,
 }
 struct QueryResponse{
     1:model.BaseResp base,
     2:model.VideoList data,
+}
+
+//是否存在视频
+
+struct IsExistRequest{
+    1:required i64 video_id,
+}
+
+struct IsExistResponse{
+    1:model.BaseResp base,
+    2:bool data,
+}
+
+//根据id获取视频
+struct GetVideoByIdRequest{
+    1:required list<i64>  video_id,
+    2:required i64 page_size ,
+    3:required i64 page_num ,
+}
+
+struct GetVideoByIdResponse{
+    1:model.BaseResp base,
+    2:model.VideoList data,
+}
+
+//排行榜
+struct UpdataRankRequest{
+    1:required i64 video_id,
+}
+
+struct UpdataRankResponse{
+    1:model.BaseResp base,
 }
 
 service VideoService{
@@ -66,4 +99,7 @@ service VideoService{
     UploadListResponse UploadList(1:UploadListRequest req)(api.get="/video/list"),
     RankResponse Rank(1:RankRequest req)(api.get="/video/popular"),
     QueryResponse Query(1:QueryRequest req)(api.post="/video/search")
+    IsExistResponse IsExist(1:IsExistRequest req)(api.post="/video/exist")
+    GetVideoByIdResponse GetVideoById(1:GetVideoByIdRequest req)(api.post="/video/getbyid")
+    UpdataRankResponse UpdataRank(1:UpdataRankRequest req)(api.post="/video/updatarank")
 }

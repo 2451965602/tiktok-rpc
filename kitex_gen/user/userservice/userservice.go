@@ -34,6 +34,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"NameToInfo": kitex.NewMethodInfo(
+		nameToInfoHandler,
+		newUserServiceNameToInfoArgs,
+		newUserServiceNameToInfoResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"Upload": kitex.NewMethodInfo(
 		uploadHandler,
 		newUserServiceUploadArgs,
@@ -59,6 +66,20 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		mFAStatusHandler,
 		newUserServiceMFAStatusArgs,
 		newUserServiceMFAStatusResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"UploadImages": kitex.NewMethodInfo(
+		uploadImagesHandler,
+		newUserServiceUploadImagesArgs,
+		newUserServiceUploadImagesResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"SearchImages": kitex.NewMethodInfo(
+		searchImagesHandler,
+		newUserServiceSearchImagesArgs,
+		newUserServiceSearchImagesResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -182,6 +203,24 @@ func newUserServiceInfoResult() interface{} {
 	return user.NewUserServiceInfoResult()
 }
 
+func nameToInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceNameToInfoArgs)
+	realResult := result.(*user.UserServiceNameToInfoResult)
+	success, err := handler.(user.UserService).NameToInfo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceNameToInfoArgs() interface{} {
+	return user.NewUserServiceNameToInfoArgs()
+}
+
+func newUserServiceNameToInfoResult() interface{} {
+	return user.NewUserServiceNameToInfoResult()
+}
+
 func uploadHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.UserServiceUploadArgs)
 	realResult := result.(*user.UserServiceUploadResult)
@@ -254,6 +293,42 @@ func newUserServiceMFAStatusResult() interface{} {
 	return user.NewUserServiceMFAStatusResult()
 }
 
+func uploadImagesHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceUploadImagesArgs)
+	realResult := result.(*user.UserServiceUploadImagesResult)
+	success, err := handler.(user.UserService).UploadImages(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceUploadImagesArgs() interface{} {
+	return user.NewUserServiceUploadImagesArgs()
+}
+
+func newUserServiceUploadImagesResult() interface{} {
+	return user.NewUserServiceUploadImagesResult()
+}
+
+func searchImagesHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.UserServiceSearchImagesArgs)
+	realResult := result.(*user.UserServiceSearchImagesResult)
+	success, err := handler.(user.UserService).SearchImages(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newUserServiceSearchImagesArgs() interface{} {
+	return user.NewUserServiceSearchImagesArgs()
+}
+
+func newUserServiceSearchImagesResult() interface{} {
+	return user.NewUserServiceSearchImagesResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -294,6 +369,16 @@ func (p *kClient) Info(ctx context.Context, req *user.InfoRequest) (r *user.Info
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) NameToInfo(ctx context.Context, req *user.NameToInfoRequest) (r *user.NameToInfoResponse, err error) {
+	var _args user.UserServiceNameToInfoArgs
+	_args.Req = req
+	var _result user.UserServiceNameToInfoResult
+	if err = p.c.Call(ctx, "NameToInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) Upload(ctx context.Context, req *user.UploadRequest) (r *user.UploadResponse, err error) {
 	var _args user.UserServiceUploadArgs
 	_args.Req = req
@@ -329,6 +414,26 @@ func (p *kClient) MFAStatus(ctx context.Context, req *user.MFAStatusRequest) (r 
 	_args.Req = req
 	var _result user.UserServiceMFAStatusResult
 	if err = p.c.Call(ctx, "MFAStatus", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UploadImages(ctx context.Context, req *user.UploadImagesRequest) (r *user.UploadImagesResponse, err error) {
+	var _args user.UserServiceUploadImagesArgs
+	_args.Req = req
+	var _result user.UserServiceUploadImagesResult
+	if err = p.c.Call(ctx, "UploadImages", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SearchImages(ctx context.Context, req *user.SearchImagesRequest) (r *user.SearchImagesResponse, err error) {
+	var _args user.UserServiceSearchImagesArgs
+	_args.Req = req
+	var _result user.UserServiceSearchImagesResult
+	if err = p.c.Call(ctx, "SearchImages", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

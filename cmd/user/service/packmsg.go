@@ -3,9 +3,9 @@ package service
 import (
 	"strconv"
 	"tiktokrpc/cmd/user/dal/db"
+	"tiktokrpc/cmd/user/pkg/constants"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 	"tiktokrpc/kitex_gen/model"
-	"tiktokrpc/pkg/constants"
-	"tiktokrpc/pkg/errmsg"
 )
 
 func BuildBaseResp(err errmsg.ErrorMessage) *model.BaseResp {

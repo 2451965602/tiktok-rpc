@@ -14,10 +14,13 @@ type Client interface {
 	Register(ctx context.Context, req *user.RegisterRequest, callOptions ...callopt.Option) (r *user.RegisterResponse, err error)
 	Login(ctx context.Context, req *user.LoginRequest, callOptions ...callopt.Option) (r *user.LoginResponse, err error)
 	Info(ctx context.Context, req *user.InfoRequest, callOptions ...callopt.Option) (r *user.InfoResponse, err error)
+	NameToInfo(ctx context.Context, req *user.NameToInfoRequest, callOptions ...callopt.Option) (r *user.NameToInfoResponse, err error)
 	Upload(ctx context.Context, req *user.UploadRequest, callOptions ...callopt.Option) (r *user.UploadResponse, err error)
 	MFAGet(ctx context.Context, req *user.MFAGetRequest, callOptions ...callopt.Option) (r *user.MFAGetResponse, err error)
 	MFA(ctx context.Context, req *user.MFABindRequest, callOptions ...callopt.Option) (r *user.MFABindResponse, err error)
 	MFAStatus(ctx context.Context, req *user.MFAStatusRequest, callOptions ...callopt.Option) (r *user.MFAStatusResponse, err error)
+	UploadImages(ctx context.Context, req *user.UploadImagesRequest, callOptions ...callopt.Option) (r *user.UploadImagesResponse, err error)
+	SearchImages(ctx context.Context, req *user.SearchImagesRequest, callOptions ...callopt.Option) (r *user.SearchImagesResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -64,6 +67,11 @@ func (p *kUserServiceClient) Info(ctx context.Context, req *user.InfoRequest, ca
 	return p.kClient.Info(ctx, req)
 }
 
+func (p *kUserServiceClient) NameToInfo(ctx context.Context, req *user.NameToInfoRequest, callOptions ...callopt.Option) (r *user.NameToInfoResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.NameToInfo(ctx, req)
+}
+
 func (p *kUserServiceClient) Upload(ctx context.Context, req *user.UploadRequest, callOptions ...callopt.Option) (r *user.UploadResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.Upload(ctx, req)
@@ -82,4 +90,14 @@ func (p *kUserServiceClient) MFA(ctx context.Context, req *user.MFABindRequest, 
 func (p *kUserServiceClient) MFAStatus(ctx context.Context, req *user.MFAStatusRequest, callOptions ...callopt.Option) (r *user.MFAStatusResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.MFAStatus(ctx, req)
+}
+
+func (p *kUserServiceClient) UploadImages(ctx context.Context, req *user.UploadImagesRequest, callOptions ...callopt.Option) (r *user.UploadImagesResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UploadImages(ctx, req)
+}
+
+func (p *kUserServiceClient) SearchImages(ctx context.Context, req *user.SearchImagesRequest, callOptions ...callopt.Option) (r *user.SearchImagesResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.SearchImages(ctx, req)
 }

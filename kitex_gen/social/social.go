@@ -13,6 +13,7 @@ import (
 type StarRequest struct {
 	ToUserId   string `thrift:"to_user_id,1,required" frugal:"1,required,string" json:"to_user_id"`
 	ActionType int64  `thrift:"action_type,2,required" frugal:"2,required,i64" json:"action_type"`
+	UserId     int64  `thrift:"user_id,3,required" frugal:"3,required,i64" json:"user_id"`
 }
 
 func NewStarRequest() *StarRequest {
@@ -30,16 +31,24 @@ func (p *StarRequest) GetToUserId() (v string) {
 func (p *StarRequest) GetActionType() (v int64) {
 	return p.ActionType
 }
+
+func (p *StarRequest) GetUserId() (v int64) {
+	return p.UserId
+}
 func (p *StarRequest) SetToUserId(val string) {
 	p.ToUserId = val
 }
 func (p *StarRequest) SetActionType(val int64) {
 	p.ActionType = val
 }
+func (p *StarRequest) SetUserId(val int64) {
+	p.UserId = val
+}
 
 var fieldIDToName_StarRequest = map[int16]string{
 	1: "to_user_id",
 	2: "action_type",
+	3: "user_id",
 }
 
 func (p *StarRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -48,6 +57,7 @@ func (p *StarRequest) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetToUserId bool = false
 	var issetActionType bool = false
+	var issetUserId bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -81,6 +91,15 @@ func (p *StarRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetUserId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -101,6 +120,11 @@ func (p *StarRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetActionType {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUserId {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -143,6 +167,17 @@ func (p *StarRequest) ReadField2(iprot thrift.TProtocol) error {
 	p.ActionType = _field
 	return nil
 }
+func (p *StarRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.UserId = _field
+	return nil
+}
 
 func (p *StarRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -156,6 +191,10 @@ func (p *StarRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -210,6 +249,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *StarRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.UserId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *StarRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -230,6 +286,9 @@ func (p *StarRequest) DeepEqual(ano *StarRequest) bool {
 	if !p.Field2DeepEqual(ano.ActionType) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.UserId) {
+		return false
+	}
 	return true
 }
 
@@ -243,6 +302,13 @@ func (p *StarRequest) Field1DeepEqual(src string) bool {
 func (p *StarRequest) Field2DeepEqual(src int64) bool {
 
 	if p.ActionType != src {
+		return false
+	}
+	return true
+}
+func (p *StarRequest) Field3DeepEqual(src int64) bool {
+
+	if p.UserId != src {
 		return false
 	}
 	return true
@@ -1499,6 +1565,7 @@ func (p *FanListResponse) Field2DeepEqual(src *model.UserInfoList) bool {
 type FriendListRequest struct {
 	PageSize int64 `thrift:"page_size,1,required" frugal:"1,required,i64" json:"page_size"`
 	PageNum  int64 `thrift:"page_num,2,required" frugal:"2,required,i64" json:"page_num"`
+	UserId   int64 `thrift:"user_id,3,required" frugal:"3,required,i64" json:"user_id"`
 }
 
 func NewFriendListRequest() *FriendListRequest {
@@ -1516,16 +1583,24 @@ func (p *FriendListRequest) GetPageSize() (v int64) {
 func (p *FriendListRequest) GetPageNum() (v int64) {
 	return p.PageNum
 }
+
+func (p *FriendListRequest) GetUserId() (v int64) {
+	return p.UserId
+}
 func (p *FriendListRequest) SetPageSize(val int64) {
 	p.PageSize = val
 }
 func (p *FriendListRequest) SetPageNum(val int64) {
 	p.PageNum = val
 }
+func (p *FriendListRequest) SetUserId(val int64) {
+	p.UserId = val
+}
 
 var fieldIDToName_FriendListRequest = map[int16]string{
 	1: "page_size",
 	2: "page_num",
+	3: "user_id",
 }
 
 func (p *FriendListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1534,6 +1609,7 @@ func (p *FriendListRequest) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetPageSize bool = false
 	var issetPageNum bool = false
+	var issetUserId bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1567,6 +1643,15 @@ func (p *FriendListRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetUserId = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1587,6 +1672,11 @@ func (p *FriendListRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetPageNum {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUserId {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1629,6 +1719,17 @@ func (p *FriendListRequest) ReadField2(iprot thrift.TProtocol) error {
 	p.PageNum = _field
 	return nil
 }
+func (p *FriendListRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.UserId = _field
+	return nil
+}
 
 func (p *FriendListRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1642,6 +1743,10 @@ func (p *FriendListRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1696,6 +1801,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *FriendListRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.UserId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *FriendListRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1716,6 +1838,9 @@ func (p *FriendListRequest) DeepEqual(ano *FriendListRequest) bool {
 	if !p.Field2DeepEqual(ano.PageNum) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.UserId) {
+		return false
+	}
 	return true
 }
 
@@ -1729,6 +1854,13 @@ func (p *FriendListRequest) Field1DeepEqual(src int64) bool {
 func (p *FriendListRequest) Field2DeepEqual(src int64) bool {
 
 	if p.PageNum != src {
+		return false
+	}
+	return true
+}
+func (p *FriendListRequest) Field3DeepEqual(src int64) bool {
+
+	if p.UserId != src {
 		return false
 	}
 	return true

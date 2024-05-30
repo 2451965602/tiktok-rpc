@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 	"tiktokrpc/cmd/user/service"
-	user "tiktokrpc/kitex_gen/user"
-	"tiktokrpc/pkg/errmsg"
+	"tiktokrpc/kitex_gen/user"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -114,5 +114,33 @@ func (s *UserServiceImpl) MFAStatus(ctx context.Context, req *user.MFAStatusRequ
 
 	resp.Base = service.BuildBaseResp(errmsg.NoError)
 
+	return
+}
+
+// NameToInfo implements the UserServiceImpl interface.
+func (s *UserServiceImpl) NameToInfo(ctx context.Context, req *user.NameToInfoRequest) (resp *user.NameToInfoResponse, err error) {
+	resp = new(user.NameToInfoResponse)
+
+	userResp, err := service.NewUserService(ctx).GetInfoByName(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp.Base = service.BuildBaseResp(errmsg.NoError)
+	resp.Data = service.UserInfoDetail(userResp)
+
+	return
+}
+
+// UploadImages implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UploadImages(ctx context.Context, req *user.UploadImagesRequest) (resp *user.UploadImagesResponse, err error) {
+	// TODO: Your code here...
+	return
+}
+
+// SearchImages implements the UserServiceImpl interface.
+func (s *UserServiceImpl) SearchImages(ctx context.Context, req *user.SearchImagesRequest) (resp *user.SearchImagesResponse, err error) {
+	// TODO: Your code here...
 	return
 }

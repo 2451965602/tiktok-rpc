@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"strings"
 	"tiktokrpc/cmd/user/pkg/constants"
-	"tiktokrpc/pkg/errmsg"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 )
 
 var Config *viper.Viper
@@ -51,10 +51,12 @@ func loadConfig() error {
 	constants.MySQLName = Config.GetString("MySQL.Name")
 	constants.MySQLDSN = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true", constants.MySQLUserName, constants.MySQLPassWord, constants.MySQLHost, constants.MySQLPort, constants.MySQLName)
 
-	constants.RedisUserName = Config.GetString("Redis.UserName")
-	constants.RedisPassWord = Config.GetString("Redis.PassWord")
-	constants.RedisHost = Config.GetString("Redis.Host")
-	constants.RedisPort = Config.GetString("Redis.Port")
+	constants.EtcdHost = Config.GetString("Etcd.Host")
+	constants.EtcdPort = Config.GetString("Etcd.Port")
+	constants.EtcdAddr = fmt.Sprintf("%s:%s", constants.EtcdHost, constants.EtcdPort)
 
+	constants.ServiceHost = Config.GetString("Service.Host")
+	constants.ServicePort = Config.GetString("Service.Port")
+	constants.ServiceAddr = fmt.Sprintf("%s:%s", constants.ServiceHost, constants.ServicePort)
 	return nil
 }

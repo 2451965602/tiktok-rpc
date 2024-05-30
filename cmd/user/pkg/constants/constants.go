@@ -8,21 +8,18 @@ var (
 	MySQLName     string
 	MySQLDSN      string
 
-	RedisUserName string
-	RedisPassWord string
-	RedisHost     string
-	RedisPort     string
+	ServiceHost string
+	ServicePort string
+	ServiceAddr string
+
+	EtcdHost string
+	EtcdPort string
+	EtcdAddr string
 )
 
 const (
-	UserTable    = "user"
-	VideoTable   = "video"
-	CommentTable = "comment"
-	LikeTable    = "like"
-	SocialTable  = "social"
-	MsgTable     = "messages"
+	UserTable = "user"
 
-	ContextUid  = "userid"
 	DefaultTime = "1970-01-01 08:00:00"
 	TimeFormat  = "2006-01-02 15:04:05"
 )

@@ -16,6 +16,9 @@ type Client interface {
 	UploadList(ctx context.Context, req *video.UploadListRequest, callOptions ...callopt.Option) (r *video.UploadListResponse, err error)
 	Rank(ctx context.Context, req *video.RankRequest, callOptions ...callopt.Option) (r *video.RankResponse, err error)
 	Query(ctx context.Context, req *video.QueryRequest, callOptions ...callopt.Option) (r *video.QueryResponse, err error)
+	IsExist(ctx context.Context, req *video.IsExistRequest, callOptions ...callopt.Option) (r *video.IsExistResponse, err error)
+	GetVideoById(ctx context.Context, req *video.GetVideoByIdRequest, callOptions ...callopt.Option) (r *video.GetVideoByIdResponse, err error)
+	UpdataRank(ctx context.Context, req *video.UpdataRankRequest, callOptions ...callopt.Option) (r *video.UpdataRankResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -70,4 +73,19 @@ func (p *kVideoServiceClient) Rank(ctx context.Context, req *video.RankRequest, 
 func (p *kVideoServiceClient) Query(ctx context.Context, req *video.QueryRequest, callOptions ...callopt.Option) (r *video.QueryResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.Query(ctx, req)
+}
+
+func (p *kVideoServiceClient) IsExist(ctx context.Context, req *video.IsExistRequest, callOptions ...callopt.Option) (r *video.IsExistResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.IsExist(ctx, req)
+}
+
+func (p *kVideoServiceClient) GetVideoById(ctx context.Context, req *video.GetVideoByIdRequest, callOptions ...callopt.Option) (r *video.GetVideoByIdResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetVideoById(ctx, req)
+}
+
+func (p *kVideoServiceClient) UpdataRank(ctx context.Context, req *video.UpdataRankRequest, callOptions ...callopt.Option) (r *video.UpdataRankResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdataRank(ctx, req)
 }

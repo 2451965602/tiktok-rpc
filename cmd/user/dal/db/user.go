@@ -2,15 +2,15 @@ package db
 
 import (
 	"context"
+	"errors"
 	"github.com/pquerna/otp/totp"
+	"gorm.io/gorm"
+	"tiktokrpc/cmd/user/pkg/constants"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 	"tiktokrpc/kitex_gen/user"
-	"tiktokrpc/pkg/constants"
-	"tiktokrpc/pkg/errmsg"
 )
 
-func CreateUser(ctx context.Context, username, password string) (*User, error) {
-
-	var userResp *User
+func CreateUser(ctx context.Context, username, password string) (userResp *User, err error) {
 
 	exist, err := IsUserNameExist(ctx, username)
 
@@ -73,16 +73,15 @@ func LoginCheck(ctx context.Context, req *user.LoginRequest) (*UserInfoDetail, e
 		Username:  userReq.Username,
 		AvatarUrl: userReq.AvatarUrl,
 		CreatedAt: userReq.CreatedAt,
+		DeletedAt: userReq.DeletedAt,
 	}
 
 	return userResp, nil
 }
 
-func GetInfo(ctx context.Context, id string) (*UserInfoDetail, error) {
+func GetInfo(ctx context.Context, id string) (userResp *UserInfoDetail, err error) {
 
-	var userResp *UserInfoDetail
-
-	err := DB.
+	err = DB.
 		WithContext(ctx).
 		Table(constants.UserTable).
 		Select("user_id,username,avatar_url,created_at,updated_at,deleted_at").
@@ -90,18 +89,38 @@ func GetInfo(ctx context.Context, id string) (*UserInfoDetail, error) {
 		First(&userResp).
 		Error
 
-	if err != nil {
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errmsg.UserNotExistError
+	} else if err != nil {
+		return nil, errmsg.DatabaseError
+
 	}
 
 	return userResp, nil
 }
 
-func UploadAvatar(ctx context.Context, id, url string) (*User, error) {
+func GetInfoByName(ctx context.Context, username string) (userResp *UserInfoDetail, err error) {
 
-	var userResp *User
+	err = DB.
+		WithContext(ctx).
+		Table(constants.UserTable).
+		Select("user_id,username,avatar_url,created_at,updated_at,deleted_at").
+		Where("username = ?", username).
+		First(&userResp).
+		Error
 
-	err := DB.
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errmsg.UserNotExistError
+	} else if err != nil {
+		return nil, errmsg.DatabaseError
+	}
+
+	return userResp, nil
+}
+
+func UploadAvatar(ctx context.Context, id, url string) (userResp *User, err error) {
+
+	err = DB.
 		WithContext(ctx).
 		Table(constants.UserTable).
 		Where("user_id = ?", id).

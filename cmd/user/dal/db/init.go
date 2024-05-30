@@ -4,8 +4,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"tiktokrpc/pkg/constants"
-	"tiktokrpc/pkg/errmsg"
+	"tiktokrpc/cmd/user/pkg/constants"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 	"time"
 )
 

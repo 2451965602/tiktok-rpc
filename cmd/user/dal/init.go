@@ -1,10 +1,14 @@
 package dal
 
-import "tiktokrpc/cmd/user/dal/db"
+import (
+	"os"
+	"tiktokrpc/cmd/user/dal/db"
+)
 
-func init() {
+func Init() {
 	err := db.Init()
 	if err != nil {
+		os.Exit(1)
 		return
 	}
 }

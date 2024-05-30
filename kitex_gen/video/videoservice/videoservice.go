@@ -48,6 +48,27 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"IsExist": kitex.NewMethodInfo(
+		isExistHandler,
+		newVideoServiceIsExistArgs,
+		newVideoServiceIsExistResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"GetVideoById": kitex.NewMethodInfo(
+		getVideoByIdHandler,
+		newVideoServiceGetVideoByIdArgs,
+		newVideoServiceGetVideoByIdResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"UpdataRank": kitex.NewMethodInfo(
+		updataRankHandler,
+		newVideoServiceUpdataRankArgs,
+		newVideoServiceUpdataRankResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -204,6 +225,60 @@ func newVideoServiceQueryResult() interface{} {
 	return video.NewVideoServiceQueryResult()
 }
 
+func isExistHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*video.VideoServiceIsExistArgs)
+	realResult := result.(*video.VideoServiceIsExistResult)
+	success, err := handler.(video.VideoService).IsExist(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newVideoServiceIsExistArgs() interface{} {
+	return video.NewVideoServiceIsExistArgs()
+}
+
+func newVideoServiceIsExistResult() interface{} {
+	return video.NewVideoServiceIsExistResult()
+}
+
+func getVideoByIdHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*video.VideoServiceGetVideoByIdArgs)
+	realResult := result.(*video.VideoServiceGetVideoByIdResult)
+	success, err := handler.(video.VideoService).GetVideoById(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newVideoServiceGetVideoByIdArgs() interface{} {
+	return video.NewVideoServiceGetVideoByIdArgs()
+}
+
+func newVideoServiceGetVideoByIdResult() interface{} {
+	return video.NewVideoServiceGetVideoByIdResult()
+}
+
+func updataRankHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*video.VideoServiceUpdataRankArgs)
+	realResult := result.(*video.VideoServiceUpdataRankResult)
+	success, err := handler.(video.VideoService).UpdataRank(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newVideoServiceUpdataRankArgs() interface{} {
+	return video.NewVideoServiceUpdataRankArgs()
+}
+
+func newVideoServiceUpdataRankResult() interface{} {
+	return video.NewVideoServiceUpdataRankResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -259,6 +334,36 @@ func (p *kClient) Query(ctx context.Context, req *video.QueryRequest) (r *video.
 	_args.Req = req
 	var _result video.VideoServiceQueryResult
 	if err = p.c.Call(ctx, "Query", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) IsExist(ctx context.Context, req *video.IsExistRequest) (r *video.IsExistResponse, err error) {
+	var _args video.VideoServiceIsExistArgs
+	_args.Req = req
+	var _result video.VideoServiceIsExistResult
+	if err = p.c.Call(ctx, "IsExist", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetVideoById(ctx context.Context, req *video.GetVideoByIdRequest) (r *video.GetVideoByIdResponse, err error) {
+	var _args video.VideoServiceGetVideoByIdArgs
+	_args.Req = req
+	var _result video.VideoServiceGetVideoByIdResult
+	if err = p.c.Call(ctx, "GetVideoById", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdataRank(ctx context.Context, req *video.UpdataRankRequest) (r *video.UpdataRankResponse, err error) {
+	var _args video.VideoServiceUpdataRankArgs
+	_args.Req = req
+	var _result video.VideoServiceUpdataRankResult
+	if err = p.c.Call(ctx, "UpdataRank", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

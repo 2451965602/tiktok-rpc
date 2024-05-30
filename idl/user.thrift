@@ -25,10 +25,20 @@ struct LoginResponse{
 }
 //用户信息
 struct InfoRequest{
-    1:required string user_id (api.query="user_id"),
+    1:required string user_id,
 }
 
 struct InfoResponse{
+    1:model.BaseResp base,
+    2:model.UserInfo data,
+}
+
+//rpc姓名获取用户信息
+struct NameToInfoRequest{
+    1:required string user_name,
+}
+
+struct NameToInfoResponse{
     1:model.BaseResp base,
     2:model.UserInfo data,
 }
@@ -76,13 +86,35 @@ struct MFAStatusResponse{
     1:model.BaseResp base,
 }
 
+//上传图片到向量数据库
+struct UploadImagesRequest{
+    1:required string CollectionName,
+}
+
+struct UploadImagesResponse{
+    1:model.BaseResp base,
+}
+
+//以图搜图
+struct SearchImagesRequest{
+//    1:required binary data ,
+}
+
+struct SearchImagesResponse{
+    1:model.BaseResp base,
+    2:string data
+}
+
 
 service UserService{
     RegisterResponse Register(1:RegisterRequest req)(api.post="/user/register"),
     LoginResponse Login(1:LoginRequest req)(api.post="/user/login"),
     InfoResponse Info(1:InfoRequest req)(api.get="/user/info"),
+    NameToInfoResponse NameToInfo(1:NameToInfoRequest req)(api.get="/user/name2info"),
     UploadResponse Upload(1:UploadRequest req)(api.put="/user/avatar/upload")
     MFAGetResponse MFAGet(1:MFAGetRequest req)(api.get="/auth/mfa/qrcode")
     MFABindResponse MFA(1:MFABindRequest req)(api.post="/auth/mfa/bind")
     MFAStatusResponse MFAStatus(1:MFAStatusRequest req)(api.post="/auth/mfa/status")
+    UploadImagesResponse UploadImages(1:UploadImagesRequest req)(api.post="/image/upload")
+    SearchImagesResponse SearchImages(1:SearchImagesRequest req)(api.post="/image/search")
 }

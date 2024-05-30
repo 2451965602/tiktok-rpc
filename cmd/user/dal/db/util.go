@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 	"image/png"
 	"net/url"
-	"tiktokrpc/pkg/constants"
-	"tiktokrpc/pkg/errmsg"
+	"tiktokrpc/cmd/user/pkg/constants"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 )
 
 func IsUserNameExist(ctx context.Context, username string) (bool, error) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"strconv"
 	"tiktokrpc/cmd/user/dal/db"
+	"tiktokrpc/cmd/user/pkg/errmsg"
 	"tiktokrpc/kitex_gen/user"
-	"tiktokrpc/pkg/errmsg"
 )
 
 type UserService struct {
@@ -27,6 +27,10 @@ func (s *UserService) Login(req *user.LoginRequest) (*db.UserInfoDetail, error) 
 
 func (s *UserService) GetInfo(req *user.InfoRequest) (*db.UserInfoDetail, error) {
 	return db.GetInfo(s.ctx, req.UserId)
+}
+
+func (s *UserService) GetInfoByName(req *user.NameToInfoRequest) (*db.UserInfoDetail, error) {
+	return db.GetInfoByName(s.ctx, req.UserName)
 }
 
 func (s *UserService) UploadAvatar(req *user.UploadRequest) (*db.User, error) {
