@@ -9,6 +9,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/hertz-contrib/opensergo/sentinel/adapter"
+	"io"
 	"os"
 	"tiktokrpc/cmd/api/biz/middleware/jwt"
 	"tiktokrpc/cmd/api/biz/router/websock"
@@ -18,26 +19,28 @@ import (
 	"tiktokrpc/cmd/api/pkg/errmsg"
 )
 
-func Init() {
+func Init() io.Closer {
 	err := cfg.Init()
 	if err != nil {
 		hlog.Info(err.Error())
 		os.Exit(1)
-		return
+		return nil
 	}
-	rpc.Init()
+	closer := rpc.Init()
 	jwt.Init()
-	return
+	return closer
 }
 
 func main() {
 
-	Init()
+	rpcCloser := Init()
+	defer rpcCloser.Close()
 
 	h := server.Default(
 		server.WithHostPorts(constants.ServiceAddr),
 		server.WithMaxRequestBodySize(1024*1024*1024),
 	)
+
 	h.Use(adapter.SentinelServerMiddleware(
 		adapter.WithServerResourceExtractor(func(c context.Context, ctx *app.RequestContext) string {
 			return "default"

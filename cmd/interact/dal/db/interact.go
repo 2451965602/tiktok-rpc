@@ -114,12 +114,16 @@ func CreateLike(ctx context.Context, userid, id int64, actiontype, sort string) 
 func LikeList(ctx context.Context, userid string, pagenum, pagesize int64) ([]*Video, int64, error) {
 
 	var videoid []*int64
+	var count int64
 
 	err := DB.
 		WithContext(ctx).
 		Table(constants.LikeTable).
 		Where("user_id = ?", userid).
 		Select("video_id").
+		Limit(int(pagesize)).
+		Offset(int((pagenum - 1) * pagesize)).
+		Count(&count).
 		Find(&videoid).
 		Error
 
@@ -127,7 +131,7 @@ func LikeList(ctx context.Context, userid string, pagenum, pagesize int64) ([]*V
 		return nil, -1, errmsg.DatabaseError.WithMessage(err.Error())
 	}
 
-	LikeResp, count, err := rpc.GetVideoById(videoid, pagesize, pagenum)
+	LikeResp, err := rpc.GetVideoById(videoid)
 	if err != nil {
 		return nil, -1, err
 	}

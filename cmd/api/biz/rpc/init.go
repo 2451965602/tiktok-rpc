@@ -10,6 +10,7 @@ import (
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"io"
 	"log"
+	"tiktokrpc/cmd/api/pkg/constants"
 	"tiktokrpc/kitex_gen/interact/interactservice"
 	"tiktokrpc/kitex_gen/social/socialservice"
 	"tiktokrpc/kitex_gen/user/userservice"
@@ -30,7 +31,7 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 		},
 		Reporter: &jaegercfg.ReporterConfig{
 			LogSpans:           true,
-			LocalAgentHostPort: "127.0.0.1:6831",
+			LocalAgentHostPort: constants.JaegerAddr,
 		},
 	}
 	tracer, closer, err := config.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
@@ -41,12 +42,11 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 	return internalOpentracing.NewDefaultClientSuite(), closer
 }
 
-func Init() {
+func Init() io.Closer {
 
 	tracerSuite, closer := InitJaeger("tiktokrpc-api")
-	defer closer.Close()
 
-	r, err := etcd.NewEtcdResolver([]string{"127.0.0.1:2379"})
+	r, err := etcd.NewEtcdResolver([]string{constants.EtcdAddr})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,5 +70,5 @@ func Init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	return closer
 }

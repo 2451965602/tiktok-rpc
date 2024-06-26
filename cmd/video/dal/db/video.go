@@ -300,15 +300,13 @@ func IsVideoExist(ctx context.Context, videoid int64) (bool, error) {
 	return true, nil
 }
 
-func GetVideoById(ctx context.Context, videoid []int64, pagesize, pagenum int64) ([]*Video, int64, error) {
+func GetVideoById(ctx context.Context, videoid []int64) ([]*Video, int64, error) {
 	var LikeResp []*Video
 	var count int64
 
 	err := DB.
 		Table(constants.VideoTable).
 		Where("`video_id` IN (?)", videoid).
-		Limit(int(pagesize)).
-		Offset(int((pagenum - 1) * pagesize)).
 		Count(&count).
 		Find(&LikeResp).
 		Error

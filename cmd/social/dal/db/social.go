@@ -5,6 +5,7 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"strconv"
+	"sync"
 	"tiktokrpc/cmd/social/pkg/constants"
 	"tiktokrpc/cmd/social/pkg/errmsg"
 	"tiktokrpc/cmd/social/rpc"
@@ -221,33 +222,63 @@ func FanUserList(ctx context.Context, userid string, pagenum, pagesize int64) (r
 }
 
 func FriendUser(ctx context.Context, userid string, pagenum, pagesize int64) (resp []*UserInfoDetail, count int64, err error) {
-
-	var StarResp []*UserInfo
-	var userId []*string
+	var socialRecords []*Social
 
 	err = DB.
 		WithContext(ctx).
 		Table(constants.SocialTable).
-		Where("user_id = ?", userid).Or("to_user_id = ?", userid).
+		Where("(user_id = ? OR to_user_id = ?)", userid, userid).
 		Where("status = ?", 0).
 		Limit(int(pagesize)).
 		Offset(int((pagenum - 1) * pagesize)).
 		Count(&count).
-		Find(&userId).
+		Find(&socialRecords).
 		Error
 
 	if err != nil {
 		return nil, -1, errmsg.DatabaseError
 	}
 
-	for _, v := range StarResp {
-		UserInfoResp, err := rpc.GetUserInfoById(strconv.FormatInt(v.UserId, 10))
-		if err != nil {
-			return nil, -1, err
-		}
-		UserInfo := InfoRespToModel(UserInfoResp)
-		resp = append(resp, UserInfo)
-	}
+	userInfoChan := make(chan *UserInfoDetail)
+	errChan := make(chan error)
+	doneChan := make(chan struct{})
 
-	return resp, count, nil
+	go func() {
+		var wg sync.WaitGroup
+		for _, record := range socialRecords {
+			wg.Add(1)
+			go func(rec *Social) {
+				defer wg.Done()
+				var userId string
+				if strconv.Itoa(int(rec.UserId)) == userid {
+					userId = strconv.FormatInt(rec.ToUserId, 10)
+				} else {
+					userId = strconv.FormatInt(rec.UserId, 10)
+				}
+				UserInfoResp, err := rpc.GetUserInfoById(userId)
+				if err != nil {
+					errChan <- err
+					return
+				}
+				userInfo := InfoRespToModel(UserInfoResp)
+				userInfoChan <- userInfo
+			}(record)
+		}
+		wg.Wait()
+		close(userInfoChan)
+		close(doneChan)
+	}()
+
+	for {
+		select {
+		case userInfo := <-userInfoChan:
+			if userInfo != nil {
+				resp = append(resp, userInfo)
+			}
+		case err := <-errChan:
+			return nil, -1, err
+		case <-doneChan:
+			return resp, count, nil
+		}
+	}
 }

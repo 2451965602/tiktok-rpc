@@ -64,19 +64,51 @@ func UploadVideoAndGetUrl(data *multipart.FileHeader, userid string) (string, st
 	fileName := uuid.NewV4().String()
 	storePath := filepath.Join("static", userid, "video")
 
-	if err := oss.SaveFile(data, filepath.Join(storePath, fileName), fileName+ext); err != nil {
-		return "", "", err
-	}
-	if err := oss.GetVideoCover(filepath.Join(storePath, fileName), fileName, ext); err != nil {
-		return "", "", err
-	}
-	videoUrl, err := oss.Upload(filepath.Join(storePath, fileName, fileName+ext), fileName, fileName+ext, userid, "video")
+	err := oss.SaveFile(data, filepath.Join(storePath, fileName), fileName+ext)
 	if err != nil {
 		return "", "", err
 	}
-	coverUrl, err := oss.Upload(filepath.Join(storePath, fileName, fileName+".png"), fileName, fileName+".png", userid, "video")
-	if err != nil {
-		return "", "", err
+
+	videoUrlChan := make(chan string)
+	coverUrlChan := make(chan string)
+	errChan := make(chan error)
+
+	go func() {
+		videoUrl, err := oss.Upload(filepath.Join(storePath, fileName, fileName+ext), fileName, fileName+ext, userid, "video")
+		if err != nil {
+			errChan <- err
+			return
+		}
+		videoUrlChan <- videoUrl
+	}()
+
+	go func() {
+		// 获取视频封面
+		err = oss.GetVideoCover(filepath.Join(storePath, fileName), fileName, ext)
+		if err != nil {
+			errChan <- err
+			return
+		}
+
+		// 上传封面文件
+		coverUrl, err := oss.Upload(filepath.Join(storePath, fileName, fileName+".png"), fileName, fileName+".png", userid, "video")
+		if err != nil {
+			errChan <- err
+			return
+		}
+		coverUrlChan <- coverUrl
+	}()
+
+	var videoUrl, coverUrl string
+	for i := 0; i < 2; i++ {
+		select {
+		case url := <-videoUrlChan:
+			videoUrl = url
+		case url := <-coverUrlChan:
+			coverUrl = url
+		case err := <-errChan:
+			return "", "", err
+		}
 	}
 
 	return videoUrl, coverUrl, nil

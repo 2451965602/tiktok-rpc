@@ -28,7 +28,7 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 		},
 		Reporter: &jaegercfg.ReporterConfig{
 			LogSpans:           true,
-			LocalAgentHostPort: "127.0.0.1:6831",
+			LocalAgentHostPort: constants.JaegerAddr,
 		},
 	}
 	tracer, closer, err := config.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
@@ -39,9 +39,8 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 	return internalOpentracing.NewDefaultClientSuite(), closer
 }
 
-func Init() {
+func Init() io.Closer {
 	tracerSuite, closer := InitJaeger("tiktokrpc-video")
-	defer closer.Close()
 	r, err := etcd.NewEtcdResolver([]string{constants.EtcdAddr})
 	if err != nil {
 		log.Fatal(err)
@@ -52,6 +51,8 @@ func Init() {
 		log.Fatal(err)
 	}
 	userClient = c
+
+	return closer
 }
 
 func GetUserInfoByName(username string) (*user.NameToInfoResponse, error) {

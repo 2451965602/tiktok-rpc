@@ -15,6 +15,10 @@ var (
 	EtcdHost string
 	EtcdPort string
 	EtcdAddr string
+
+	JaegerHost string
+	JaegerPort string
+	JaegerAddr string
 )
 
 const (

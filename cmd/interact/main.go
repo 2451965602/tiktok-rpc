@@ -6,16 +6,18 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/cloudwego/netpoll"
 	"github.com/kitex-contrib/registry-etcd"
-	internal_opentracing "github.com/kitex-contrib/tracer-opentracing"
+	internalopentracing "github.com/kitex-contrib/tracer-opentracing"
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"io"
 	"log"
+	_ "net/http/pprof"
 	"os"
 	"tiktokrpc/cmd/interact/dal"
 	"tiktokrpc/cmd/interact/pkg/cfg"
 	"tiktokrpc/cmd/interact/pkg/constants"
+	"tiktokrpc/cmd/interact/pkg/pprof"
 	"tiktokrpc/cmd/interact/rpc"
 	interact "tiktokrpc/kitex_gen/interact/interactservice"
 )
@@ -29,7 +31,7 @@ func InitJaeger(service string) (server.Suite, io.Closer) {
 		},
 		Reporter: &jaegercfg.ReporterConfig{
 			LogSpans:           true,
-			LocalAgentHostPort: "127.0.0.1:6831",
+			LocalAgentHostPort: constants.JaegerAddr,
 		},
 	}
 	tracer, closer, err := config.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
@@ -37,21 +39,26 @@ func InitJaeger(service string) (server.Suite, io.Closer) {
 		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
 	}
 	opentracing.SetGlobalTracer(tracer)
-	return internal_opentracing.NewDefaultServerSuite(), closer
+	return internalopentracing.NewDefaultServerSuite(), closer
 }
 
-func Init() {
+func Init() io.Closer {
 	err := cfg.Init()
 	if err != nil {
 		os.Exit(1)
-		return
+		return nil
 	}
 	dal.Init()
-	rpc.Init()
+	closer := rpc.Init()
+	return closer
 }
 
 func main() {
-	Init()
+
+	pprof.Load()
+
+	rpcCloser := Init()
+	defer rpcCloser.Close()
 
 	tracerSuite, closer := InitJaeger("tiktokrpc-interact")
 	defer closer.Close()

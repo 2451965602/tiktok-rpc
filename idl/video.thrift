@@ -75,8 +75,6 @@ struct IsExistResponse{
 //根据id获取视频
 struct GetVideoByIdRequest{
     1:required list<i64>  video_id,
-    2:required i64 page_size ,
-    3:required i64 page_num ,
 }
 
 struct GetVideoByIdResponse{

@@ -55,6 +55,10 @@ func loadConfig() error {
 	constants.EtcdPort = Config.GetString("Etcd.Port")
 	constants.EtcdAddr = fmt.Sprintf("%s:%s", constants.EtcdHost, constants.EtcdPort)
 
+	constants.JaegerHost = Config.GetString("Jaeger.Host")
+	constants.JaegerPort = Config.GetString("Jaeger.Port")
+	constants.JaegerAddr = fmt.Sprintf("%s:%s", constants.JaegerHost, constants.JaegerPort)
+
 	constants.ServiceHost = Config.GetString("Service.Host")
 	constants.ServicePort = Config.GetString("Service.Port")
 	constants.ServiceAddr = fmt.Sprintf("%s:%s", constants.ServiceHost, constants.ServicePort)

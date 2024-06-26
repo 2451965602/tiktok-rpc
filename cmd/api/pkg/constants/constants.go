@@ -23,6 +23,10 @@ var (
 	EtcdPort string
 	EtcdAddr string
 
+	JaegerHost string
+	JaegerPort string
+	JaegerAddr string
+
 	SentinelThreshold        float64
 	SentinelStatIntervalInMs uint32
 )

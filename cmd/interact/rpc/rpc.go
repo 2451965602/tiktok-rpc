@@ -29,7 +29,7 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 		},
 		Reporter: &jaegercfg.ReporterConfig{
 			LogSpans:           true,
-			LocalAgentHostPort: "127.0.0.1:6831",
+			LocalAgentHostPort: constants.JaegerAddr,
 		},
 	}
 	tracer, closer, err := config.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
@@ -40,9 +40,8 @@ func InitJaeger(service string) (client.Suite, io.Closer) {
 	return internalOpentracing.NewDefaultClientSuite(), closer
 }
 
-func Init() {
+func Init() io.Closer {
 	tracerSuite, closer := InitJaeger("tiktokrpc-interact")
-	defer closer.Close()
 
 	r, err := etcd.NewEtcdResolver([]string{constants.EtcdAddr})
 	if err != nil {
@@ -54,6 +53,8 @@ func Init() {
 		log.Fatal(err)
 	}
 	videoClient = c
+
+	return closer
 }
 
 func IsVideoExist(videoid int64) (bool, error) {
@@ -69,7 +70,7 @@ func IsVideoExist(videoid int64) (bool, error) {
 	return videoResp.Data, nil
 }
 
-func GetVideoById(videoid []*int64, pagesize, pagenum int64) (*model.VideoList, int64, error) {
+func GetVideoById(videoid []*int64) (*model.VideoList, error) {
 	var videoIdList []int64
 
 	videoReq := video.NewGetVideoByIdRequest()
@@ -81,17 +82,15 @@ func GetVideoById(videoid []*int64, pagesize, pagenum int64) (*model.VideoList, 
 	}
 
 	videoReq.VideoId = videoIdList
-	videoReq.PageNum = pagenum
-	videoReq.PageSize = pagesize
 
 	videoResp, err := videoClient.GetVideoById(context.Background(), videoReq)
 	if err != nil {
-		return nil, -1, errmsg.RpcCommunicationError
+		return nil, errmsg.RpcCommunicationError
 	} else if videoResp.Base.Code != errmsg.NoErrorCode {
-		return nil, -1, errmsg.NewErrorMessage(videoResp.Base.Code, videoResp.Base.Msg)
+		return nil, errmsg.NewErrorMessage(videoResp.Base.Code, videoResp.Base.Msg)
 	}
 
-	return videoResp.Data, videoResp.Data.Total, nil
+	return videoResp.Data, nil
 }
 
 func UpdataRank(videoid int64) error {

@@ -15,6 +15,7 @@ require (
 	github.com/h2non/filetype v1.1.3
 	github.com/hertz-contrib/jwt v1.0.2
 	github.com/hertz-contrib/opensergo v0.0.1
+	github.com/hertz-contrib/pprof v0.1.2
 	github.com/hertz-contrib/websocket v0.1.0
 	github.com/kitex-contrib/registry-etcd v0.2.2
 	github.com/kitex-contrib/tracer-opentracing v0.0.3
@@ -56,6 +57,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect

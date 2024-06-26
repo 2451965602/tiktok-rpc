@@ -125,7 +125,7 @@ func (s *VideoService) IsVideoExist(req *video.IsExistRequest) (bool, error) {
 
 func (s *VideoService) GetVideoByid(req *video.GetVideoByIdRequest) ([]*db.Video, int64, error) {
 
-	likeResp, count, err := db.GetVideoById(s.ctx, req.VideoId, req.PageSize, req.PageNum)
+	likeResp, count, err := db.GetVideoById(s.ctx, req.VideoId)
 	if err != nil {
 		return nil, -1, err
 	}
