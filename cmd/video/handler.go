@@ -55,11 +55,10 @@ func (s *VideoServiceImpl) UploadList(ctx context.Context, req *video.UploadList
 func (s *VideoServiceImpl) Rank(ctx context.Context, req *video.RankRequest) (resp *video.RankResponse, err error) {
 	resp = new(video.RankResponse)
 
-	videoResp, err := service.NewVideoService(ctx).Rank(req)
+	videoResp, count, err := service.NewVideoService(ctx).Rank(req)
 	if err != nil {
 		return nil, err
 	}
-	count := int64(len(videoResp))
 
 	resp.Base = service.BuildBaseResp(errmsg.NoError)
 	resp.Data = service.VideoList(videoResp, count)

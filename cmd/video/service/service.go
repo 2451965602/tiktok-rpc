@@ -56,28 +56,28 @@ func (s *VideoService) UploadList(req *video.UploadListRequest) ([]*db.Video, in
 	return resp, num, err
 }
 
-func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, error) {
+func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, int64, error) {
 
 	resp, err := redis.RankList(s.ctx)
 	if err != nil {
-		return nil, err
+		return nil, -1, err
 	}
 
 	if resp == nil {
 
 		rank, err := redis.IdRankList(s.ctx)
 		if err != nil {
-			return nil, err
+			return nil, -1, err
 		}
 
 		resp, err := db.Rank(s.ctx, rank)
 		if err != nil {
-			return nil, err
+			return nil, -1, err
 		}
 
 		err = redis.AddToRank(s.ctx, resp)
 		if err != nil {
-			return nil, err
+			return nil, -1, err
 		}
 	}
 
@@ -85,14 +85,14 @@ func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, error) {
 	endIndex := startIndex + req.PageSize
 
 	if startIndex >= int64(len(resp)) {
-		return []*db.Video{}, nil
+		return []*db.Video{}, 0, nil
 	}
 
 	if endIndex > int64(len(resp)) {
 		endIndex = int64(len(resp))
 	}
 
-	return resp[startIndex:endIndex], nil
+	return resp[startIndex:endIndex], int64(len(resp)), nil
 
 }
 
