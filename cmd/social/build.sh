@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-RUN_NAME="tiktokrpc"
+RUN_NAME=tiktok_social
 
 mkdir -p output/bin
 cp script/* output/

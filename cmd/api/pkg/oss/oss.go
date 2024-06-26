@@ -8,7 +8,7 @@ import (
 	"github.com/h2non/filetype"
 	"github.com/qiniu/go-sdk/v7/auth"
 	"github.com/qiniu/go-sdk/v7/storage"
-	ffmpeg_go "github.com/u2takey/ffmpeg-go"
+	ffmpeggo "github.com/u2takey/ffmpeg-go"
 	"io"
 	"mime/multipart"
 	"os"
@@ -82,8 +82,8 @@ func GetVideoCover(storePath, fileName, ext string) error {
 
 	videoPath := filepath.Join(storePath, fileName) + ext
 	buf := bytes.NewBuffer(nil)
-	err := ffmpeg_go.Input(videoPath).Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 1)}).
-		Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
+	err := ffmpeggo.Input(videoPath).Filter("select", ffmpeggo.Args{fmt.Sprintf("gte(n,%d)", 1)}).
+		Output("pipe:", ffmpeggo.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
 		WithOutput(buf, os.Stdout).
 		Run()
 

@@ -20,7 +20,7 @@ func Init() error {
 	}
 
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("tiktok")
+	viper.SetEnvPrefix("tiktok_user")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	err := loadConfig()
