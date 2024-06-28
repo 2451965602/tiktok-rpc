@@ -19,9 +19,9 @@ func Init() error {
 		return errmsg.ConfigMissError
 	}
 
-	viper.AutomaticEnv()
-	viper.SetEnvPrefix("tiktok_interact")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	Config.AutomaticEnv()
+	Config.SetEnvPrefix("tiktok")
+	Config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	err := loadConfig()
 	if err != nil {

@@ -3,17 +3,17 @@ Service:
     Port: 10002
 
 Etcd:
-    Host: 10.233.121.132
+    Host: tiktok-etcd
     Port: 2379
 
 Jaeger:
-    Host: 10.233.121.132
+    Host: tiktok-etcd
     Port: 6831
 
 MySQL:
     UserName: username
     PassWord: password
-    Host: 10.233.121.132
+    Host: tiktok-etcd
     Port: 3306
     Name: databasename
 
