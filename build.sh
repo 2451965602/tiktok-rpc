@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 创建输出目录
 mkdir -p output
