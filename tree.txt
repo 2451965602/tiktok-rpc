@@ -1,0 +1,299 @@
+├── bootstrap.sh
+├── build.sh
+├── cmd
+│   ├── api
+│   │   ├── biz
+│   │   │   ├── dal
+│   │   │   │   ├── db
+│   │   │   │   │   ├── init.go
+│   │   │   │   │   ├── model.go
+│   │   │   │   │   └── websocket.go
+│   │   │   │   └── init.go
+│   │   │   ├── handler
+│   │   │   │   ├── interact
+│   │   │   │   │   └── interact_service.go
+│   │   │   │   ├── ping.go
+│   │   │   │   ├── social
+│   │   │   │   │   └── social_service.go
+│   │   │   │   ├── user
+│   │   │   │   │   └── user_service.go
+│   │   │   │   ├── video
+│   │   │   │   │   └── video_service.go
+│   │   │   │   └── websocket
+│   │   │   │       └── websocket.go
+│   │   │   ├── middleware
+│   │   │   │   ├── jwt
+│   │   │   │   │   └── jwt.go
+│   │   │   │   └── sentinel
+│   │   │   │       └── sentinel.go
+│   │   │   ├── model
+│   │   │   │   ├── interact
+│   │   │   │   │   └── interact.go
+│   │   │   │   ├── model
+│   │   │   │   │   └── model.go
+│   │   │   │   ├── social
+│   │   │   │   │   └── social.go
+│   │   │   │   ├── user
+│   │   │   │   │   └── user.go
+│   │   │   │   └── video
+│   │   │   │       └── video.go
+│   │   │   ├── pack
+│   │   │   │   ├── interact.go
+│   │   │   │   ├── pack.go
+│   │   │   │   ├── social.go
+│   │   │   │   ├── user.go
+│   │   │   │   └── video.go
+│   │   │   ├── router
+│   │   │   │   ├── auth
+│   │   │   │   │   └── auth.go
+│   │   │   │   ├── interact
+│   │   │   │   │   ├── interact.go
+│   │   │   │   │   └── middleware.go
+│   │   │   │   ├── model
+│   │   │   │   │   ├── middleware.go
+│   │   │   │   │   └── model.go
+│   │   │   │   ├── register.go
+│   │   │   │   ├── social
+│   │   │   │   │   ├── middleware.go
+│   │   │   │   │   └── social.go
+│   │   │   │   ├── user
+│   │   │   │   │   ├── middleware.go
+│   │   │   │   │   └── user.go
+│   │   │   │   ├── video
+│   │   │   │   │   ├── middleware.go
+│   │   │   │   │   └── video.go
+│   │   │   │   └── websock
+│   │   │   │       ├── ws_auth.go
+│   │   │   │       ├── ws_middleware.go
+│   │   │   │       ├── ws_register.go
+│   │   │   │       └── ws_router.go
+│   │   │   ├── rpc
+│   │   │   │   ├── init.go
+│   │   │   │   ├── interact.go
+│   │   │   │   ├── social.go
+│   │   │   │   ├── user.go
+│   │   │   │   └── video.go
+│   │   │   └── service
+│   │   │       ├── interact.go
+│   │   │       ├── service.go
+│   │   │       ├── social.go
+│   │   │       ├── user.go
+│   │   │       ├── video.go
+│   │   │       └── websocket.go
+│   │   ├── build.sh
+│   │   ├── config
+│   │   │   ├── config.example.yaml
+│   │   │   └── config.yaml
+│   │   ├── Dockerfile
+│   │   ├── idl
+│   │   │   ├── interact.thrift
+│   │   │   ├── model.thrift
+│   │   │   ├── social.thrift
+│   │   │   ├── user.thrift
+│   │   │   └── video.thrift
+│   │   ├── main.go
+│   │   ├── pkg
+│   │   │   ├── cfg
+│   │   │   │   └── cfgload.go
+│   │   │   ├── constants
+│   │   │   │   └── constants.go
+│   │   │   ├── errmsg
+│   │   │   │   └── errmsg.go
+│   │   │   └── oss
+│   │   │       └── oss.go
+│   │   ├── router_gen.go
+│   │   ├── router.go
+│   │   ├── script
+│   │   │   └── bootstrap.sh
+│   │   └── static
+│   │       └── 10000
+│   │           ├── avatar
+│   │           └── video
+│   │               └── 95766968-c011-4d63-952b-cdaca28c9878
+│   ├── interact
+│   │   ├── build.sh
+│   │   ├── config
+│   │   │   ├── config.example.yaml
+│   │   │   └── config.yaml
+│   │   ├── dal
+│   │   │   ├── db
+│   │   │   │   ├── init.go
+│   │   │   │   ├── interact.go
+│   │   │   │   ├── model.go
+│   │   │   │   └── util.go
+│   │   │   ├── init.go
+│   │   │   └── redis
+│   │   │       ├── init.go
+│   │   │       └── interact.go
+│   │   ├── handler.go
+│   │   ├── kitex_info.yaml
+│   │   ├── main.go
+│   │   ├── pkg
+│   │   │   ├── cfg
+│   │   │   │   └── cfgload.go
+│   │   │   ├── constants
+│   │   │   │   └── constants.go
+│   │   │   ├── errmsg
+│   │   │   │   └── errmsg.go
+│   │   │   └── pprof
+│   │   │       └── pprof.go
+│   │   ├── rpc
+│   │   │   └── rpc.go
+│   │   ├── script
+│   │   │   └── bootstrap.sh
+│   │   └── service
+│   │       ├── packmsg.go
+│   │       └── service.go
+│   ├── social
+│   │   ├── build.sh
+│   │   ├── config
+│   │   │   ├── config.example.yaml
+│   │   │   └── config.yaml
+│   │   ├── dal
+│   │   │   ├── db
+│   │   │   │   ├── init.go
+│   │   │   │   ├── model.go
+│   │   │   │   ├── social.go
+│   │   │   │   └── util.go
+│   │   │   └── init.go
+│   │   ├── handler.go
+│   │   ├── kitex_info.yaml
+│   │   ├── main.go
+│   │   ├── pkg
+│   │   │   ├── cfg
+│   │   │   │   └── cfgload.go
+│   │   │   ├── constants
+│   │   │   │   └── constants.go
+│   │   │   ├── errmsg
+│   │   │   │   └── errmsg.go
+│   │   │   └── pprof
+│   │   │       └── pprof.go
+│   │   ├── rpc
+│   │   │   └── rpc.go
+│   │   ├── script
+│   │   │   └── bootstrap.sh
+│   │   └── service
+│   │       ├── packmsg.go
+│   │       └── service.go
+│   ├── user
+│   │   ├── build.sh
+│   │   ├── config
+│   │   │   ├── config.example.yaml
+│   │   │   └── config.yaml
+│   │   ├── dal
+│   │   │   ├── db
+│   │   │   │   ├── init.go
+│   │   │   │   ├── model.go
+│   │   │   │   ├── user.go
+│   │   │   │   └── util.go
+│   │   │   └── init.go
+│   │   ├── handler.go
+│   │   ├── kitex_info.yaml
+│   │   ├── main.go
+│   │   ├── pkg
+│   │   │   ├── cfg
+│   │   │   │   └── cfgload.go
+│   │   │   ├── constants
+│   │   │   │   └── constants.go
+│   │   │   ├── errmsg
+│   │   │   │   └── errmsg.go
+│   │   │   └── pprof
+│   │   │       └── pprof.go
+│   │   ├── script
+│   │   │   └── bootstrap.sh
+│   │   └── service
+│   │       ├── packmsg.go
+│   │       └── service.go
+│   └── video
+│       ├── build.sh
+│       ├── config
+│       │   ├── config.example.yaml
+│       │   └── config.yaml
+│       ├── dal
+│       │   ├── db
+│       │   │   ├── init.go
+│       │   │   ├── model.go
+│       │   │   ├── util.go
+│       │   │   └── video.go
+│       │   ├── init.go
+│       │   └── redis
+│       │       ├── init.go
+│       │       └── video.go
+│       ├── handler.go
+│       ├── kitex_info.yaml
+│       ├── main.go
+│       ├── pkg
+│       │   ├── cfg
+│       │   │   └── cfgload.go
+│       │   ├── constants
+│       │   │   └── constants.go
+│       │   ├── errmsg
+│       │   │   └── errmsg.go
+│       │   └── pprof
+│       │       └── pprof.go
+│       ├── rpc
+│       │   └── rpc.go
+│       ├── script
+│       │   └── bootstrap.sh
+│       └── service
+│           ├── packmsg.go
+│           └── service.go
+├── docker-compose.yml
+├── Dockerfile
+├── docs
+│   ├── config.md
+│   └── launch.md
+├── go.mod
+├── go.sum
+├── idl
+│   ├── interact.thrift
+│   ├── model.thrift
+│   ├── social.thrift
+│   ├── user.thrift
+│   └── video.thrift
+├── init.sql
+├── kitex_gen
+│   ├── interact
+│   │   ├── interact.go
+│   │   ├── interactservice
+│   │   │   ├── client.go
+│   │   │   ├── interactservice.go
+│   │   │   ├── invoker.go
+│   │   │   └── server.go
+│   │   ├── k-consts.go
+│   │   └── k-interact.go
+│   ├── model
+│   │   ├── k-consts.go
+│   │   ├── k-model.go
+│   │   └── model.go
+│   ├── social
+│   │   ├── k-consts.go
+│   │   ├── k-social.go
+│   │   ├── social.go
+│   │   └── socialservice
+│   │       ├── client.go
+│   │       ├── invoker.go
+│   │       ├── server.go
+│   │       └── socialservice.go
+│   ├── user
+│   │   ├── k-consts.go
+│   │   ├── k-user.go
+│   │   ├── user.go
+│   │   └── userservice
+│   │       ├── client.go
+│   │       ├── invoker.go
+│   │       ├── server.go
+│   │       └── userservice.go
+│   └── video
+│       ├── k-consts.go
+│       ├── k-video.go
+│       ├── video.go
+│       └── videoservice
+│           ├── client.go
+│           ├── invoker.go
+│           ├── server.go
+│           └── videoservice.go
+├── README.md
+├── stop.sh
+└── tree.txt
+

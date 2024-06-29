@@ -58,10 +58,13 @@ func (s *VideoService) UploadList(req *video.UploadListRequest) ([]*db.Video, in
 
 func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, int64, error) {
 
+	var resp []*db.Video
 	resp, err := redis.RankList(s.ctx)
 	if err != nil {
 		return nil, -1, err
 	}
+
+	errChan := make(chan error, 1)
 
 	if resp == nil {
 
@@ -70,15 +73,17 @@ func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, int64, error) 
 			return nil, -1, err
 		}
 
-		resp, err := db.Rank(s.ctx, rank)
+		resp, err = db.Rank(s.ctx, rank)
 		if err != nil {
 			return nil, -1, err
 		}
 
-		err = redis.AddToRank(s.ctx, resp)
-		if err != nil {
-			return nil, -1, err
-		}
+		go func() {
+			err := redis.AddToRank(s.ctx, resp)
+			errChan <- err
+		}()
+	} else {
+		close(errChan) // 直接关闭通道，表示不再发送错误
 	}
 
 	startIndex := (req.PageNum - 1) * req.PageSize
@@ -92,6 +97,14 @@ func (s *VideoService) Rank(req *video.RankRequest) ([]*db.Video, int64, error) 
 		endIndex = int64(len(resp))
 	}
 
+	select {
+	case err := <-errChan:
+		if err != nil {
+			return nil, -1, err
+		}
+	default:
+
+	}
 	return resp[startIndex:endIndex], int64(len(resp)), nil
 
 }

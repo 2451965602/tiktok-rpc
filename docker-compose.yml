@@ -1,15 +1,58 @@
-version: "3"
+version: '3.8'
 
 services:
-  etcd:
-    image: bitnami/etcd:3.5
-    container_name: etcd
-    ports:
-      - "2379:2379"
-      - "2380:2380"
-    volumes:
-      - ./etcd/data:/bitnami/etcd-data
-    environment:
-      - TZ=Asia/Shanghai
-      - ALLOW_NONE_AUTHENTICATION=yes
-      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    mysql:
+        image: mysql:latest
+        container_name: mysql
+        ports:
+            - "3306:3306"
+            - "33060:33060"
+        environment:
+            MYSQL_PASSWORD: west123
+            MYSQL_USER: west
+            MYSQL_DATABASE: west
+            MYSQL_ROOT_PASSWORD: root
+        restart: always
+
+    redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+            - "6379:6379"
+        restart: always
+
+    etcd:
+        image: bitnami/etcd:3.5
+        container_name: etcd
+        ports:
+            - "2379:2379"
+            - "2380:2380"
+        environment:
+            TZ: Asia/Shanghai
+            ALLOW_NONE_AUTHENTICATION: 'yes'
+            ETCD_ADVERTISE_CLIENT_URLS: 'http://etcd:2379'
+        restart: always
+
+    jaeger:
+        image: jaegertracing/all-in-one:latest
+        container_name: jaeger
+        ports:
+            - "6831:6831/udp"
+            - "6831:6831/tcp"
+            - "16686:16686/tcp"
+        restart: always
+
+    tiktok:
+        image: rpc
+        container_name: tiktok
+        ports:
+            - "10000:10000"
+            - "9999:9999"
+        environment:
+            TIKTOK_MYSQL_HOST: mysql
+            TIKTOK_MYSQL_USERNAME: root
+            TIKTOK_MYSQL_PASSWORD: root
+            TIKTOK_ETCD_HOST: etcd
+            TIKTOK_JAEGER_HOST: jaeger
+            TIKTOK_REDIS_HOST: redis
+        restart: always

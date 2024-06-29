@@ -107,7 +107,7 @@ func UploadVideoAndGetUrl(data *multipart.FileHeader, userid string) (string, st
 		case url := <-coverUrlChan:
 			coverUrl = url
 		case err := <-errChan:
-			return "", "", err
+			return "", "", errmsg.ServiceError.WithMessage(err.Error())
 		}
 	}
 
