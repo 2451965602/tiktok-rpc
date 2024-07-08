@@ -88,7 +88,9 @@ struct MFAStatusResponse{
 
 //上传图片到向量数据库
 struct UploadImagesRequest{
-    1:required string CollectionName,
+    1:required string ImgPath
+    2:required string CollectionName,
+    3:required string ImgUrl,
 }
 
 struct UploadImagesResponse{
@@ -97,7 +99,9 @@ struct UploadImagesResponse{
 
 //以图搜图
 struct SearchImagesRequest{
-//    1:required binary data ,
+    1:required string ImgPath
+    2:required string CollectionName,
+    3:required string ImgUrl
 }
 
 struct SearchImagesResponse{

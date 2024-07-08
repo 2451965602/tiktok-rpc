@@ -27,6 +27,11 @@ func Register(r *server.Hertz) {
 		}
 	}
 	{
+		_image := root.Group("/image", _imageMw()...)
+		_image.POST("/search", append(_searchimagesMw(), user.SearchImages)...)
+		_image.POST("/upload", append(_uploadimagesMw(), user.UploadImages)...)
+	}
+	{
 		_user := root.Group("/user", _userMw()...)
 		_user.GET("/info", append(_infoMw(), user.Info)...)
 		_user.POST("/login", append(_loginMw(), user.Login)...)

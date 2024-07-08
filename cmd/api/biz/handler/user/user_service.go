@@ -170,3 +170,43 @@ func MFAStatus(ctx context.Context, c *app.RequestContext) {
 
 	pack.SendResponse(c, resp)
 }
+
+// UploadImages .
+// @router /image/upload [POST]
+func UploadImages(ctx context.Context, c *app.RequestContext) {
+	data, err := c.FormFile("data")
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	resp := new(user.UploadImagesResponse)
+
+	resp, err = service.NewUserService(ctx, c).UploadImage(data)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	pack.SendResponse(c, resp)
+}
+
+// SearchImages .
+// @router /image/search [POST]
+func SearchImages(ctx context.Context, c *app.RequestContext) {
+	data, err := c.FormFile("data")
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	resp := new(user.SearchImagesResponse)
+
+	resp, err = service.NewUserService(ctx, c).SearchImages(data)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	pack.SendResponse(c, resp)
+}

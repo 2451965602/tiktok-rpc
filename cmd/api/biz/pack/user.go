@@ -75,6 +75,23 @@ func UploadAvater(userResp *rpcUser.UploadResponse) (resp *user.UploadResponse) 
 	return
 }
 
+func AiUpload(userResp *rpcUser.UploadImagesResponse) (resp *user.UploadImagesResponse) {
+	resp = new(user.UploadImagesResponse)
+
+	resp.Base = (*model.BaseResp)(userResp.Base)
+
+	return
+}
+
+func AiSearch(userResp *rpcUser.SearchImagesResponse) (resp *user.SearchImagesResponse) {
+	resp = new(user.SearchImagesResponse)
+
+	resp.Base = (*model.BaseResp)(userResp.Base)
+	resp.Data = userResp.Data
+
+	return
+}
+
 func MFAGet(userResp *rpcUser.MFAGetResponse) (resp *user.MFAGetResponse) {
 	resp = new(user.MFAGetResponse)
 

@@ -137,3 +137,41 @@ func MFAStatus(req *user.MFAStatusRequest, userId int64) (userResp *rpcUser.MFAS
 
 	return userResp, nil
 }
+
+func AiUploadImages(url, path string) (userResp *rpcUser.UploadImagesResponse, err error) {
+
+	userReq := new(rpcUser.UploadImagesRequest)
+
+	userReq.ImgUrl = url
+	userReq.ImgPath = "/media/fzuer/数据/golang/src/GoCode/Practice/tiktok-rpc/cmd/api/" + path
+	userReq.CollectionName = "images"
+
+	userResp, err = userClient.UploadImages(context.Background(), userReq)
+
+	if err != nil {
+		return nil, errmsg.RpcCommunicationError.WithMessage(err.Error())
+	} else if userResp.Base.Code != errmsg.NoErrorCode {
+		return nil, errmsg.NewErrorMessage(userResp.Base.Code, userResp.Base.Msg)
+	}
+
+	return userResp, nil
+}
+
+func AiSearchImages(url, path string) (userResp *rpcUser.SearchImagesResponse, err error) {
+
+	userReq := new(rpcUser.SearchImagesRequest)
+
+	userReq.ImgPath = "/media/fzuer/数据/golang/src/GoCode/Practice/tiktok-rpc/cmd/api/" + path
+	userReq.ImgUrl = url
+	userReq.CollectionName = "images"
+
+	userResp, err = userClient.SearchImages(context.Background(), userReq)
+
+	if err != nil {
+		return nil, errmsg.RpcCommunicationError.WithMessage(err.Error())
+	} else if userResp.Base.Code != errmsg.NoErrorCode {
+		return nil, errmsg.NewErrorMessage(userResp.Base.Code, userResp.Base.Msg)
+	}
+
+	return userResp, nil
+}

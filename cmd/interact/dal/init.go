@@ -15,7 +15,7 @@ func Init() {
 
 	err = redis.Init()
 	if err != nil {
-		os.Exit(1)
+		os.Exit(2)
 		return
 	}
 }

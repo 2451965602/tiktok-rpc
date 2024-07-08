@@ -58,6 +58,25 @@ func UploadAvatarAndGetUrl(data *multipart.FileHeader, userid string) (string, e
 	return url, nil
 }
 
+func UploadImagesAndGetUrl(data *multipart.FileHeader) (string, string, error) {
+	ext := strings.ToLower(path.Ext(data.Filename))
+
+	fileName := uuid.NewV4().String() + ext
+	storePath := filepath.Join("static", "search", "images")
+
+	if err := oss.SaveFile(data, storePath, fileName); err != nil {
+		return "", "", err
+	}
+
+	url, err := oss.Upload(filepath.Join(storePath, fileName), "", fileName, "", "images")
+
+	if err != nil {
+		return "", "", err
+	}
+
+	return url, filepath.Join(storePath, fileName), nil
+}
+
 func UploadVideoAndGetUrl(data *multipart.FileHeader, userid string) (string, string, error) {
 	ext := strings.ToLower(path.Ext(data.Filename))
 

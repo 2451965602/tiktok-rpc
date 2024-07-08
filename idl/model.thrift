@@ -88,6 +88,7 @@ struct Social{
     3:required i64 status,
 }
 
+
 struct BaseResp{
     1:required i64 code,
     2:required string msg,

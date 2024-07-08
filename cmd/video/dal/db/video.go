@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"tiktokrpc/cmd/video/pkg/constants"
 	"tiktokrpc/cmd/video/pkg/errmsg"
-	"tiktokrpc/cmd/video/rpc"
 	"tiktokrpc/kitex_gen/video"
 	"time"
 )
@@ -86,11 +85,6 @@ func UploadList(ctx context.Context, pagenum, pagesize int64, userid string) ([]
 	var err error
 	var count int64
 
-	_, err = rpc.GetUserInfoById(userid)
-	if err != nil {
-		return nil, -1, err
-	}
-
 	err = DB.
 		WithContext(ctx).
 		Table(constants.VideoTable).
@@ -129,19 +123,13 @@ func Rank(ctx context.Context, rank []string) ([]*Video, error) {
 	return videoResp, nil
 }
 
-func Query(ctx context.Context, req *video.QueryRequest) ([]*Video, int64, error) {
+func Query(ctx context.Context, req *video.QueryRequest, userInfo *User) ([]*Video, int64, error) {
 
 	var videoResp []*Video
 	var err error
 	var count int64
 
 	if req.Keywords != nil && req.Username != nil && req.FromDate != nil && req.ToDate != nil {
-
-		userInfoResp, err := rpc.GetUserInfoByName(*req.Username)
-		if err != nil {
-			return nil, -1, errmsg.UserNotExistError
-		}
-		userInfo := NameToInfoRespToModel(userInfoResp)
 
 		err = DB.
 			WithContext(ctx).
@@ -160,12 +148,6 @@ func Query(ctx context.Context, req *video.QueryRequest) ([]*Video, int64, error
 		}
 
 	} else if req.Keywords == nil && req.Username != nil && req.FromDate != nil && req.ToDate != nil {
-
-		userInfoResp, err := rpc.GetUserInfoByName(*req.Username)
-		if err != nil {
-			return nil, -1, errmsg.UserNotExistError
-		}
-		userInfo := NameToInfoRespToModel(userInfoResp)
 
 		err = DB.
 			WithContext(ctx).
@@ -201,12 +183,6 @@ func Query(ctx context.Context, req *video.QueryRequest) ([]*Video, int64, error
 
 	if req.Keywords != nil && req.Username != nil && req.FromDate == nil && req.ToDate == nil {
 
-		userInfoResp, err := rpc.GetUserInfoByName(*req.Username)
-		if err != nil {
-			return nil, -1, errmsg.UserNotExistError
-		}
-		userInfo := NameToInfoRespToModel(userInfoResp)
-
 		err = DB.
 			WithContext(ctx).
 			Table(constants.VideoTable).
@@ -223,12 +199,6 @@ func Query(ctx context.Context, req *video.QueryRequest) ([]*Video, int64, error
 		}
 
 	} else if req.Keywords == nil && req.Username != nil && req.FromDate == nil && req.ToDate == nil {
-
-		userInfoResp, err := rpc.GetUserInfoByName(*req.Username)
-		if err != nil {
-			return nil, -1, errmsg.UserNotExistError
-		}
-		userInfo := NameToInfoRespToModel(userInfoResp)
 
 		err = DB.
 			WithContext(ctx).

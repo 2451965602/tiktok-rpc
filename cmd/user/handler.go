@@ -135,12 +135,30 @@ func (s *UserServiceImpl) NameToInfo(ctx context.Context, req *user.NameToInfoRe
 
 // UploadImages implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UploadImages(ctx context.Context, req *user.UploadImagesRequest) (resp *user.UploadImagesResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.UploadImagesResponse)
+
+	err = service.NewUserService(ctx).AiUploadImages(req)
+	if err != nil {
+		return nil, err
+	}
+
+	resp.Base = service.BuildBaseResp(errmsg.NoError)
+
 	return
 }
 
 // SearchImages implements the UserServiceImpl interface.
 func (s *UserServiceImpl) SearchImages(ctx context.Context, req *user.SearchImagesRequest) (resp *user.SearchImagesResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.SearchImagesResponse)
+
+	userResp, err := service.NewUserService(ctx).AiSearchImages(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp.Base = service.BuildBaseResp(errmsg.NoError)
+	resp.Data = userResp
+
 	return
 }

@@ -87,3 +87,42 @@ func (s *UserService) MFAStatus(req *user.MFAStatusRequest) (*user.MFAStatusResp
 	}
 	return pack.MFAStatus(resp), nil
 }
+
+func (s *UserService) UploadImage(img *multipart.FileHeader) (*user.UploadImagesResponse, error) {
+
+	err := oss.IsImage(img)
+	if err != nil {
+		return nil, err
+	}
+
+	imagesUrl, path, err := UploadImagesAndGetUrl(img)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := rpc.AiUploadImages(imagesUrl, path)
+	if err != nil {
+		return nil, err
+	}
+
+	return pack.AiUpload(resp), nil
+}
+
+func (s *UserService) SearchImages(img *multipart.FileHeader) (*user.SearchImagesResponse, error) {
+
+	err := oss.IsImage(img)
+	if err != nil {
+		return nil, err
+	}
+
+	imagesUrl, path, err := UploadImagesAndGetUrl(img)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := rpc.AiSearchImages(imagesUrl, path)
+	if err != nil {
+		return nil, err
+	}
+	return pack.AiSearch(resp), nil
+}

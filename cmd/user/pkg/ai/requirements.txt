@@ -1,0 +1,5 @@
+torch==2.2.0
+torchvision==0.17
+matplotlib==3.8.0
+grpcio==1.64.1
+grpcio-tools==1.64.1

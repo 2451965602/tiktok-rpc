@@ -3,6 +3,7 @@ package dal
 import (
 	"os"
 	"tiktokrpc/cmd/user/dal/db"
+	milvus "tiktokrpc/cmd/user/dal/miluvs"
 )
 
 func Init() {
@@ -11,4 +12,7 @@ func Init() {
 		os.Exit(1)
 		return
 	}
+
+	milvus.Init()
+
 }

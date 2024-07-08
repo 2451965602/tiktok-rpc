@@ -19,12 +19,14 @@ func Init() error {
 	redisDBVideoId = redis.NewClient(&redis.Options{
 		Addr:     constants.RedisHost + ":" + constants.RedisPort,
 		Username: constants.RedisUserName,
+		Password: constants.RedisPassWord,
 		DB:       0,
 	})
 
 	redisDBVideo = redis.NewClient(&redis.Options{
 		Addr:     constants.RedisHost + ":" + constants.RedisPort,
 		Username: constants.RedisUserName,
+		Password: constants.RedisPassWord,
 		DB:       1,
 	})
 

@@ -110,8 +110,10 @@ func Upload(localFile, videoName, fileName, userid, origin string) (string, erro
 
 	if origin == "avatar" {
 		key = fmt.Sprintf("%s/%s/%s", userid, origin, fileName)
-	} else {
+	} else if origin == "video" {
 		key = fmt.Sprintf("%s/%s/%s/%s", userid, origin, videoName, fileName)
+	} else {
+		key = fmt.Sprintf("%s/%s/%s", origin, "search", fileName)
 	}
 
 	putPolicy := storage.PutPolicy{
@@ -146,9 +148,11 @@ func Upload(localFile, videoName, fileName, userid, origin string) (string, erro
 		return "", errmsg.OssUploadError
 	}
 
-	err = os.Remove(localFile)
-	if err != nil {
-		return "", errmsg.FileDeleteError
+	if origin != "images" {
+		err = os.Remove(localFile)
+		if err != nil {
+			return "", errmsg.FileDeleteError
+		}
 	}
 
 	return storage.MakePublicURL(constants.QiNiuDomain, ret.Key), nil

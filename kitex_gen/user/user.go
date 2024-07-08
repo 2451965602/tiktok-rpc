@@ -3674,6 +3674,9 @@ func (p *MFAStatusResponse) Field1DeepEqual(src *model.BaseResp) bool {
 }
 
 type UploadImagesRequest struct {
+	ImgPath        string `thrift:"ImgPath,1,required" frugal:"1,required,string" json:"ImgPath"`
+	CollectionName string `thrift:"CollectionName,2,required" frugal:"2,required,string" json:"CollectionName"`
+	ImgUrl         string `thrift:"ImgUrl,3,required" frugal:"3,required,string" json:"ImgUrl"`
 }
 
 func NewUploadImagesRequest() *UploadImagesRequest {
@@ -3684,12 +3687,40 @@ func (p *UploadImagesRequest) InitDefault() {
 	*p = UploadImagesRequest{}
 }
 
-var fieldIDToName_UploadImagesRequest = map[int16]string{}
+func (p *UploadImagesRequest) GetImgPath() (v string) {
+	return p.ImgPath
+}
+
+func (p *UploadImagesRequest) GetCollectionName() (v string) {
+	return p.CollectionName
+}
+
+func (p *UploadImagesRequest) GetImgUrl() (v string) {
+	return p.ImgUrl
+}
+func (p *UploadImagesRequest) SetImgPath(val string) {
+	p.ImgPath = val
+}
+func (p *UploadImagesRequest) SetCollectionName(val string) {
+	p.CollectionName = val
+}
+func (p *UploadImagesRequest) SetImgUrl(val string) {
+	p.ImgUrl = val
+}
+
+var fieldIDToName_UploadImagesRequest = map[int16]string{
+	1: "ImgPath",
+	2: "CollectionName",
+	3: "ImgUrl",
+}
 
 func (p *UploadImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetImgPath bool = false
+	var issetCollectionName bool = false
+	var issetImgUrl bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -3703,8 +3734,39 @@ func (p *UploadImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetImgPath = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCollectionName = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetImgUrl = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 		if err = iprot.ReadFieldEnd(); err != nil {
 			goto ReadFieldEndError
@@ -3714,25 +3776,90 @@ func (p *UploadImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetImgPath {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCollectionName {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetImgUrl {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UploadImagesRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_UploadImagesRequest[fieldId]))
+}
+
+func (p *UploadImagesRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ImgPath = _field
+	return nil
+}
+func (p *UploadImagesRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.CollectionName = _field
+	return nil
+}
+func (p *UploadImagesRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ImgUrl = _field
+	return nil
 }
 
 func (p *UploadImagesRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
 	if err = oprot.WriteStructBegin("UploadImagesRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -3743,10 +3870,63 @@ func (p *UploadImagesRequest) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *UploadImagesRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ImgPath", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ImgPath); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *UploadImagesRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CollectionName", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CollectionName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *UploadImagesRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ImgUrl", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ImgUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *UploadImagesRequest) String() string {
@@ -3761,6 +3941,37 @@ func (p *UploadImagesRequest) DeepEqual(ano *UploadImagesRequest) bool {
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.ImgPath) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.CollectionName) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.ImgUrl) {
+		return false
+	}
+	return true
+}
+
+func (p *UploadImagesRequest) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.ImgPath, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UploadImagesRequest) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.CollectionName, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UploadImagesRequest) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.ImgUrl, src) != 0 {
 		return false
 	}
 	return true
@@ -3937,6 +4148,9 @@ func (p *UploadImagesResponse) Field1DeepEqual(src *model.BaseResp) bool {
 }
 
 type SearchImagesRequest struct {
+	ImgPath        string `thrift:"ImgPath,1,required" frugal:"1,required,string" json:"ImgPath"`
+	CollectionName string `thrift:"CollectionName,2,required" frugal:"2,required,string" json:"CollectionName"`
+	ImgUrl         string `thrift:"ImgUrl,3,required" frugal:"3,required,string" json:"ImgUrl"`
 }
 
 func NewSearchImagesRequest() *SearchImagesRequest {
@@ -3947,12 +4161,40 @@ func (p *SearchImagesRequest) InitDefault() {
 	*p = SearchImagesRequest{}
 }
 
-var fieldIDToName_SearchImagesRequest = map[int16]string{}
+func (p *SearchImagesRequest) GetImgPath() (v string) {
+	return p.ImgPath
+}
+
+func (p *SearchImagesRequest) GetCollectionName() (v string) {
+	return p.CollectionName
+}
+
+func (p *SearchImagesRequest) GetImgUrl() (v string) {
+	return p.ImgUrl
+}
+func (p *SearchImagesRequest) SetImgPath(val string) {
+	p.ImgPath = val
+}
+func (p *SearchImagesRequest) SetCollectionName(val string) {
+	p.CollectionName = val
+}
+func (p *SearchImagesRequest) SetImgUrl(val string) {
+	p.ImgUrl = val
+}
+
+var fieldIDToName_SearchImagesRequest = map[int16]string{
+	1: "ImgPath",
+	2: "CollectionName",
+	3: "ImgUrl",
+}
 
 func (p *SearchImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetImgPath bool = false
+	var issetCollectionName bool = false
+	var issetImgUrl bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -3966,8 +4208,39 @@ func (p *SearchImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetImgPath = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCollectionName = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetImgUrl = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 		if err = iprot.ReadFieldEnd(); err != nil {
 			goto ReadFieldEndError
@@ -3977,25 +4250,90 @@ func (p *SearchImagesRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetImgPath {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCollectionName {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetImgUrl {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SearchImagesRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SearchImagesRequest[fieldId]))
+}
+
+func (p *SearchImagesRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ImgPath = _field
+	return nil
+}
+func (p *SearchImagesRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.CollectionName = _field
+	return nil
+}
+func (p *SearchImagesRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ImgUrl = _field
+	return nil
 }
 
 func (p *SearchImagesRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
 	if err = oprot.WriteStructBegin("SearchImagesRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -4006,10 +4344,63 @@ func (p *SearchImagesRequest) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SearchImagesRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ImgPath", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ImgPath); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SearchImagesRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CollectionName", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CollectionName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *SearchImagesRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ImgUrl", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ImgUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *SearchImagesRequest) String() string {
@@ -4024,6 +4415,37 @@ func (p *SearchImagesRequest) DeepEqual(ano *SearchImagesRequest) bool {
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.ImgPath) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.CollectionName) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.ImgUrl) {
+		return false
+	}
+	return true
+}
+
+func (p *SearchImagesRequest) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.ImgPath, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *SearchImagesRequest) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.CollectionName, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *SearchImagesRequest) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.ImgUrl, src) != 0 {
 		return false
 	}
 	return true

@@ -73,6 +73,25 @@ struct MFAStatusResponse{
     1:model.BaseResp base,
 }
 
+//上传图片到向量数据库
+struct UploadImagesRequest{
+
+}
+
+struct UploadImagesResponse{
+    1:model.BaseResp base,
+}
+
+//以图搜图
+struct SearchImagesRequest{
+
+}
+
+struct SearchImagesResponse{
+    1:model.BaseResp base,
+    2:string data
+}
+
 
 service UserService{
     RegisterResponse Register(1:RegisterRequest req)(api.post="/user/register"),
@@ -82,4 +101,6 @@ service UserService{
     MFAGetResponse MFAGet(1:MFAGetRequest req)(api.get="/auth/mfa/qrcode")
     MFABindResponse MFA(1:MFABindRequest req)(api.post="/auth/mfa/bind")
     MFAStatusResponse MFAStatus(1:MFAStatusRequest req)(api.post="/auth/mfa/status")
+    UploadImagesResponse UploadImages(1:UploadImagesRequest req)(api.post="/image/upload")
+    SearchImagesResponse SearchImages(1:SearchImagesRequest req)(api.post="/image/search")
 }

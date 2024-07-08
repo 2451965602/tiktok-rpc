@@ -4,6 +4,8 @@ import (
 	"context"
 	"strconv"
 	"tiktokrpc/cmd/user/dal/db"
+	milvus "tiktokrpc/cmd/user/dal/miluvs"
+	"tiktokrpc/cmd/user/pkg/ai/rpc"
 	"tiktokrpc/cmd/user/pkg/errmsg"
 	"tiktokrpc/kitex_gen/user"
 )
@@ -57,4 +59,38 @@ func (s *UserService) MFAStatus(req *user.MFAStatusRequest) error {
 	}
 
 	return nil
+}
+
+func (s *UserService) AiUploadImages(req *user.UploadImagesRequest) error {
+
+	if err := milvus.CreateCollection(s.ctx, req); err != nil {
+		return err
+	}
+
+	vector, err := rpc.GerVector(req.ImgPath)
+	if err != nil {
+		return err
+	}
+	if err := milvus.InsertData(s.ctx, vector, req.ImgUrl, req.CollectionName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *UserService) AiSearchImages(req *user.SearchImagesRequest) (string, error) {
+
+	vector, err := rpc.GerVector(req.ImgPath)
+	if err != nil {
+		return "", err
+	}
+
+	url, err := milvus.Search(vector, req)
+	if err != nil {
+		return "", err
+	}
+
+	_ = milvus.InsertData(s.ctx, vector, req.ImgUrl, req.CollectionName)
+
+	return url, nil
 }

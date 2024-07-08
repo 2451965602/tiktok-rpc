@@ -6,6 +6,8 @@ import (
 	"tiktokrpc/cmd/video/dal/db"
 	"tiktokrpc/cmd/video/dal/redis"
 	"tiktokrpc/cmd/video/pkg/errmsg"
+	"tiktokrpc/cmd/video/rpc"
+	"tiktokrpc/kitex_gen/user"
 	"tiktokrpc/kitex_gen/video"
 )
 
@@ -47,6 +49,11 @@ func (s *VideoService) UploadVideo(req *video.UploadRequest) error {
 func (s *VideoService) UploadList(req *video.UploadListRequest) ([]*db.Video, int64, error) {
 
 	var resp []*db.Video
+
+	_, err := rpc.GetUserInfoById(strconv.FormatInt(req.UserId, 10))
+	if err != nil {
+		return nil, -1, err
+	}
 
 	resp, num, err := db.UploadList(s.ctx, req.PageNum, req.PageSize, strconv.FormatInt(req.UserId, 10))
 	if err != nil {
@@ -116,9 +123,24 @@ func (s *VideoService) Query(req *video.QueryRequest) ([]*db.Video, int64, error
 		return nil, -1, errmsg.IllegalParamError
 	}
 
-	var resp []*db.Video
+	var (
+		resp         []*db.Video
+		userInfo     *db.User
+		userInfoResp *user.NameToInfoResponse
+		err          error
+	)
 
-	resp, num, err := db.Query(s.ctx, req)
+	if req.Username != nil {
+		userInfoResp, err = rpc.GetUserInfoByName(*req.Username)
+		if err != nil {
+			return nil, -1, errmsg.UserNotExistError
+		}
+		userInfo = db.NameToInfoRespToModel(userInfoResp)
+	} else {
+		userInfo = nil
+	}
+
+	resp, num, err := db.Query(s.ctx, req, userInfo)
 	if err != nil {
 		return nil, -1, err
 	}

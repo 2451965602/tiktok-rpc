@@ -66,3 +66,18 @@ func _uploadMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _imageMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _searchimagesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _uploadimagesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
